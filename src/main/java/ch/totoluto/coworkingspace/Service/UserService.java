@@ -74,6 +74,14 @@ public class UserService {
         }
     }
 
+    public boolean isUserAdmin(User user){
+        if(user.getRoleFk().getId() == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public List<User> getAllUsers(){
         return userRepo.findAll();
     }

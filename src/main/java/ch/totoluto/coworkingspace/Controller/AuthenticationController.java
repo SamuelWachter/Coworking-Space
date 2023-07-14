@@ -31,13 +31,6 @@ public class AuthenticationController {
         this.tokenService = tokenService;
     }
 
-
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (!userService.checkIfUserExists(user.getEmail())) {

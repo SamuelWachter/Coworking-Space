@@ -1,5 +1,6 @@
 package ch.totoluto.coworkingspace.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
@@ -16,6 +17,7 @@ public class Halfday {
     private String name;
 
     @OneToMany(mappedBy = "halfdayFk")
+    @JsonIgnore
     private Set<Booking> bookings = new LinkedHashSet<>();
 
     public Set<Booking> getBookings() {

@@ -1,5 +1,6 @@
 package ch.totoluto.coworkingspace.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
@@ -15,14 +16,16 @@ public class Company {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_fk_owner", nullable = false)
     private User userFkOwner;
 
     @OneToMany(mappedBy = "companyFk")
+    @JsonIgnore
     private Set<User> users = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "companyFk")
+    @JsonIgnore
     private Set<Booking> bookings = new LinkedHashSet<>();
 
     public Set<Booking> getBookings() {
