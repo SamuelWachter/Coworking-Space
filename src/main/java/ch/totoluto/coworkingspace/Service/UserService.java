@@ -7,16 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
-    private UserRepository userRepo;
-    private PasswordEncoder passwordEncoder;
-    private RoleRepository roleRepo;
+    private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepo;
 
-    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder, RoleRepository roleRepo){
-        this.userRepo = userRepo;
-        this.roleRepo = roleRepo;
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+        this.userRepo = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepo = roleRepository;
     }
 
     public User createUser(User user){
@@ -60,6 +63,22 @@ public class UserService {
     }
 
     public User getUserByEmail(String email){
-        return userRepo.findByEmail(email);
+        return userRepo.findFirstByEmail(email);
+    }
+
+    public Boolean checkIfUserExists(String email){
+        if(userRepo.findFirstByEmail(email) != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public List<User> getAllUsers(){
+        return userRepo.findAll();
+    }
+
+    public Boolean checkIfPasswordMatches(String userPwd, String password){
+        return passwordEncoder.matches(password, userPwd);
     }
 }

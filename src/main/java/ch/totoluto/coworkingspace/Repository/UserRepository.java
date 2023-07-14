@@ -4,5 +4,5 @@ import ch.totoluto.coworkingspace.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByEmail(String email);
+    User findFirstByEmail(String email);
 }
