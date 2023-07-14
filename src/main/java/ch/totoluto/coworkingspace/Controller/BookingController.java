@@ -19,13 +19,11 @@ public class BookingController {
     private final BookingService bookingService;
     private final UserService userService;
     private final TokenService tokenService;
-    private final CompanyService companyService;
 
-    public BookingController(BookingService bookingService, UserService userService, TokenService tokenService, CompanyService companyService) {
+    public BookingController(BookingService bookingService, UserService userService, TokenService tokenService) {
         this.bookingService = bookingService;
         this.userService = userService;
         this.tokenService = tokenService;
-        this.companyService = companyService;
     }
 
     @GetMapping("/")
@@ -74,7 +72,7 @@ public class BookingController {
         if(tokenService.isTokenNotExpired(token)){
             if(userService.isUserAdmin(user)) {
                 //Allow Admin to access all data
-                User bookingUser = booking.getUserFk();
+                User bookingUser = userService.getUserById(booking.getUserFk().getId());
                 Booking bookingById = bookingService.createBooking(booking, bookingUser);
                 return ResponseEntity.ok(bookingById);
             } else {
@@ -93,7 +91,8 @@ public class BookingController {
         if(tokenService.isTokenNotExpired(token)){
             if(userService.isUserAdmin(user)) {
                 //Allow Admin to access all data
-                Booking updatedBooking = bookingService.updateBooking(booking, booking.getUserFk());
+                System.out.println(booking.getUserFk());
+                Booking updatedBooking = bookingService.updateBooking(booking, userService.getUserById(booking.getUserFk().getId()));
                 return ResponseEntity.ok(updatedBooking);
             } else {
                 //Allow User to update only his own data
@@ -105,13 +104,13 @@ public class BookingController {
         }
     }
 
-    @PutMapping("/")
-    public ResponseEntity<Booking> acceptBooking(@RequestHeader("Authorization") String token, @RequestBody Booking booking){
+    @PutMapping("/accept/{id}")
+    public ResponseEntity<Booking> acceptBooking(@RequestHeader("Authorization") String token, @PathVariable int id){
         User user = userService.getUserById(tokenService.getUserIdByToken(token));
         if(tokenService.isTokenNotExpired(token)){
             if(userService.isUserAdmin(user)) {
                 //Allow Admin to access all data
-                Booking bookingById = bookingService.acceptBooking(booking, user);
+                Booking bookingById = bookingService.acceptBooking(bookingService.getBookingById(id), user);
                 return ResponseEntity.ok(bookingById);
             } else {
                 return ResponseEntity.status(403).build();

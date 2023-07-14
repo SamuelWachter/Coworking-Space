@@ -14,12 +14,12 @@ public class Booking {
     private Integer id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_fk")
-    @JsonIgnoreProperties({"email", "password", "prename", "surname", "roleFk", "bookings"})
+    @JsonIgnoreProperties({"email", "password", "prename", "surname", "bookings", "companyFk"})
     private User userFk;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_fk")
-    @JsonIgnoreProperties("userFkOwner")
+    @JsonIgnoreProperties({"users", "userFkOwner", "bookings"})
     private Company companyFk;
 
     @Column(name = "date", nullable = false)
